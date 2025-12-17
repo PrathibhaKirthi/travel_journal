@@ -1,0 +1,11 @@
+<h1 class="mb-4"> Edit Entry</h1>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <%= render "form", entry: @entry %>
+  </div>
+</div>
+
+<div class="mt-3">
+  <%= link_to "Back to entries", entries_path, class: "btn btn-secondary" %>
+</div>

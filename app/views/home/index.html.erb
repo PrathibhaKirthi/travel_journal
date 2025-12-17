@@ -1,0 +1,13 @@
+<div class="text-center mt-5">
+  <h1>Welcome to Travel Journal</h1>
+  <p class="lead mt-3">
+    This is a travel journal app where you can create, view, edit, and delete your travel entries.
+    Upload photos, search your memories, and manage your travels easily.
+  </p>
+
+  <% if user_signed_in? %>
+    <%= link_to "View Your Entries", entries_path, class: "btn btn-primary mt-3" %>
+  <% else %>
+    <%= link_to "Sign Up to Start Journaling", new_user_registration_path, class: "btn btn-primary mt-3" %>
+  <% end %>
+</div>

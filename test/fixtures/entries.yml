@@ -1,0 +1,9 @@
+one:
+  title: MyString
+  content: MyText
+  user: one
+
+two:
+  title: Another
+  content: More content
+  user: one

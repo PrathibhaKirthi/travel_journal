@@ -1,0 +1,12 @@
+<h2><%= @entry.title %></h2>
+
+<p class="mt-3"><%= simple_format(@entry.content) %></p>
+
+<% if @entry.image.attached? %>
+  <%= image_tag @entry.image, class: "entry-image" %>
+<% end %>
+
+<div class="mt-4">
+  <%= link_to "Edit", edit_entry_path(@entry), class: "btn btn-outline-secondary" %>
+  <%= link_to "Back", entries_path, class: "btn btn-link" %>
+</div>
