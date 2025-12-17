@@ -12,12 +12,6 @@ gem "jbuilder"
 
 gem "tzinfo-data", platforms: %i[windows jruby]
 
-# ✅ Keep cache
-gem "solid_cache"
-
-# ❌ REMOVE Solid Queue (BREAKS RENDER)
-# gem "solid_queue"
-# gem "solid_cable"
 
 gem "bootsnap", require: false
 gem "popper_js", "~> 2.11"
