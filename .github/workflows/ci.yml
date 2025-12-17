@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Make binstubs executable
+        run: chmod +x bin/* || true
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -20,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Make binstubs executable
+        run: chmod +x bin/* || true
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -31,6 +35,8 @@ jobs:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
       - uses: actions/checkout@v5
+      - name: Make binstubs executable
+        run: chmod +x bin/* || true
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -50,18 +56,33 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: travel_journal_test
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=5
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - uses: actions/checkout@v5
+      - name: Make binstubs executable
+        run: chmod +x bin/* || true
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - run: sudo apt-get update && sudo apt-get install -y libpq-dev
+      - run: sudo apt-get update && sudo apt-get install -y libpq-dev postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            pg_isready -h postgres -p 5432 -U postgres && exit 0
+            sleep 1
+          done
+          exit 1
+
       - name: Setup test database & run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/travel_journal_test
         run: |
           bin/rails db:create db:migrate
           bin/rails test
@@ -75,21 +96,37 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: travel_journal_test
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=5
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - uses: actions/checkout@v5
+      - name: Make binstubs executable
+        run: chmod +x bin/* || true
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - run: sudo apt-get update && sudo apt-get install -y libpq-dev
+      - run: sudo apt-get update && sudo apt-get install -y libpq-dev postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            pg_isready -h postgres -p 5432 -U postgres && exit 0
+            sleep 1
+          done
+          exit 1
+
       - name: Setup test database & run system tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/travel_journal_test
         run: |
           bin/rails db:create db:migrate
           bin/rails test:system
+
       - name: Upload screenshots from failed system tests
         uses: actions/upload-artifact@v4
         if: failure()
