@@ -9,7 +9,7 @@ jobs:
   scan_ruby:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fix binstubs (permissions + ruby.exe)
         run: |
@@ -26,7 +26,7 @@ jobs:
   scan_js:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fix binstubs (permissions + ruby.exe)
         run: |
@@ -44,7 +44,7 @@ jobs:
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fix binstubs (permissions + ruby.exe)
         run: |
@@ -79,7 +79,7 @@ jobs:
           --health-retries=5
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fix binstubs (permissions + ruby.exe)
         run: |
@@ -124,7 +124,7 @@ jobs:
           --health-retries=5
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fix binstubs (permissions + ruby.exe)
         run: |
