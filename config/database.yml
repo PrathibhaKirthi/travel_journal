@@ -1,29 +1,46 @@
-# PostgreSQL configuration for Rails on Windows
+# PostgreSQL configuration for Rails
 
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: postgres
-  password: Prathu@2530
-  host: localhost
-  port: 5432
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
+  username: postgres
+  password: Prathu@2530
+  host: localhost
+  port: 5432
   database: travel_journal_development
 
 test:
   <<: *default
+  username: postgres
+  password: Prathu@2530
+  host: localhost
+  port: 5432
   database: travel_journal_test
 
-cable:
+production:
   <<: *default
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   database: <%= ENV['DB_NAME'] %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
+  port: 5432
 
+cable:
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: 5432
+
+queue:
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: 5432
