@@ -10,11 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Make binstubs executable
-        run: chmod +x bin/* || true
+
+      - name: Fix binstubs (permissions + ruby.exe)
+        run: |
+          chmod +x bin/* || true
+          sed -i 's/ruby\.exe/ruby/g' bin/*
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - run: bin/brakeman --no-pager
       - run: bin/bundler-audit
 
@@ -22,11 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Make binstubs executable
-        run: chmod +x bin/* || true
+
+      - name: Fix binstubs (permissions + ruby.exe)
+        run: |
+          chmod +x bin/* || true
+          sed -i 's/ruby\.exe/ruby/g' bin/*
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - run: bin/importmap audit
 
   lint:
@@ -35,16 +45,22 @@ jobs:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
       - uses: actions/checkout@v5
-      - name: Make binstubs executable
-        run: chmod +x bin/* || true
+
+      - name: Fix binstubs (permissions + ruby.exe)
+        run: |
+          chmod +x bin/* || true
+          sed -i 's/ruby\.exe/ruby/g' bin/*
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - uses: actions/cache@v4
         with:
           path: ${{ env.RUBOCOP_CACHE_ROOT }}
           key: rubocop-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
           restore-keys: rubocop-
+
       - run: bin/rubocop -f github
 
   test:
@@ -64,11 +80,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Make binstubs executable
-        run: chmod +x bin/* || true
+
+      - name: Fix binstubs (permissions + ruby.exe)
+        run: |
+          chmod +x bin/* || true
+          sed -i 's/ruby\.exe/ruby/g' bin/*
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - run: sudo apt-get update && sudo apt-get install -y libpq-dev postgresql-client
 
       - name: Wait for Postgres
@@ -104,11 +125,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Make binstubs executable
-        run: chmod +x bin/* || true
+
+      - name: Fix binstubs (permissions + ruby.exe)
+        run: |
+          chmod +x bin/* || true
+          sed -i 's/ruby\.exe/ruby/g' bin/*
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - run: sudo apt-get update && sudo apt-get install -y libpq-dev postgresql-client
 
       - name: Wait for Postgres
