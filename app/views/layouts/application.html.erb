@@ -27,16 +27,22 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav ms-auto align-items-center">
             <% if user_signed_in? %>
-              <li class="nav-item navbar-text me-3">
+              <li class="nav-item me-3 text-white">
                 Hi, <%= current_user.email %>
               </li>
+
               <li class="nav-item">
                 <%= link_to "New Entry", new_entry_path, class: "nav-link" %>
               </li>
+
               <li class="nav-item">
-                <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %>
+                <%= button_to "Logout",
+                      destroy_user_session_path,
+                      method: :delete,
+                      class: "btn btn-link nav-link",
+                      form: { class: "d-inline" } %>
               </li>
             <% else %>
               <li class="nav-item">
@@ -51,16 +57,12 @@
       </div>
     </nav>
 
-    <div class="container page-wrapper mt-4">
+    <div class="container mt-4">
       <% flash.each do |_, msg| %>
         <div class="alert alert-success"><%= msg %></div>
       <% end %>
 
       <%= yield %>
-
-      <div class="footer">
-        © <%= Time.current.year %> Travel Journal
-      </div>
     </div>
 
     <!-- Bootstrap JS -->

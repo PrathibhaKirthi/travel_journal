@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  resources :journal_entries
   resources :entries
+  resources :journal_entries
 
   root "journal_entries#index"
 

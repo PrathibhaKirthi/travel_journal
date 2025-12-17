@@ -13,7 +13,11 @@
       <div class="card-body">
         <h5 class="card-title"><%= entry.title %></h5>
         <p class="card-text"><%= truncate(entry.content, length: 140) %></p>
-        <%= link_to "Read more", entry, class: "btn btn-sm btn-outline-primary" %>
+        <div class="d-flex gap-2">
+          <%= link_to "Read more", entry, class: "btn btn-sm btn-outline-primary" %>
+          <%= link_to "Edit", edit_entry_path(entry), class: "btn btn-sm btn-outline-secondary" %>
+          <%= button_to "Delete", entry, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+        </div>
       </div>
     </div>
   <% end %>
