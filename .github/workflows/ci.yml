@@ -9,19 +9,12 @@ jobs:
   scan_ruby:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-
-      - name: Scan for Rails security issues
-        run: bin/brakeman --no-pager
-
-      - name: Scan gems for vulnerabilities
-        run: bin/bundler-audit
+      - run: bin/brakeman --no-pager
+      - run: bin/bundler-audit
 
   scan_js:
     runs-on: ubuntu-latest
@@ -55,31 +48,34 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15
+        image: postgres
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: travel_journal_test
         ports:
           - 5432:5432
-        options: > 
-          --health-cmd="pg_isready -U postgres" 
+        options: >-
+          --health-cmd="pg_isready" 
           --health-interval=10s 
           --health-timeout=5s 
           --health-retries=5
-
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
     steps:
       - run: sudo apt-get update && sudo apt-get install -y libpq-dev
       - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Wait for Postgres & Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
+      - name: Wait for Postgres & run tests
         run: |
-          until pg_isready -h 127.0.0.1 -p 5432 -U postgres; do
+          until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
             echo "Waiting for Postgres..."
             sleep 2
           done
@@ -90,37 +86,40 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15
+        image: postgres
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: travel_journal_test
         ports:
           - 5432:5432
-        options: > 
-          --health-cmd="pg_isready -U postgres" 
+        options: >-
+          --health-cmd="pg_isready" 
           --health-interval=10s 
           --health-timeout=5s 
           --health-retries=5
-
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
     steps:
       - run: sudo apt-get update && sudo apt-get install -y libpq-dev
       - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Wait for Postgres & Run System tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/travel_journal_test
+      - name: Wait for Postgres & run system tests
         run: |
-          until pg_isready -h 127.0.0.1 -p 5432 -U postgres; do
+          until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
             echo "Waiting for Postgres..."
             sleep 2
           done
           bin/rails db:create db:migrate
           bin/rails test:system
-      - name: Keep screenshots from failed system tests
+      - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
         if: failure()
         with:
