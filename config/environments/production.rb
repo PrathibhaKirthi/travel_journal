@@ -19,11 +19,10 @@ Rails.application.configure do
 
   config.silence_healthcheck_path = "/up"
   config.active_support.report_deprecations = false
-  
+
 config.cache_store = :memory_store
 
 
-  # ✅ IMPORTANT FIX — disable Solid Queue
   config.active_job.queue_adapter = :async
 
   config.action_mailer.default_url_options = { host: "example.com" }
