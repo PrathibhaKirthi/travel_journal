@@ -1,0 +1,39 @@
+name: Rails CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: travel_journal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+      - run: gem install bundler
+      - run: bundle install --jobs 4 --retry 3
+      - run: rails db:create db:migrate RAILS_ENV=test
+      - run: rails test
+
+      # Optional: if tests pass, Render auto-deploy happens automatically
+      # because your Render service is linked to GitHub main branch
