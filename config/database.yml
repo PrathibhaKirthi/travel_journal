@@ -17,7 +17,7 @@ test:
   <<: *default
   database: travel_journal_test
 
-production:
+cable:
   <<: *default
   adapter: postgresql
   encoding: unicode
@@ -26,3 +26,4 @@ production:
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
+
